@@ -58,6 +58,8 @@ if [ ! -f "$WORKSPACE/.venv/setup_complete" ]; then
     # Forza numpy<2 — opencv 4.9 non è compatibile con numpy 2.x
     pip install "numpy<2"
 
+    pip install tensorboard==2.19.0
+
     touch "$WORKSPACE/.venv/setup_complete"
     echo "==> venv pronto."
 else
