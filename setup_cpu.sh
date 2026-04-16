@@ -55,6 +55,9 @@ if [ ! -f "$WORKSPACE/.venv/setup_complete" ]; then
     # hf_transfer — richiesto da RunPod (HF_HUB_ENABLE_HF_TRANSFER=1 di default)
     pip install hf_transfer
 
+    # Forza numpy<2 — opencv 4.9 non è compatibile con numpy 2.x
+    pip install "numpy<2"
+
     touch "$WORKSPACE/.venv/setup_complete"
     echo "==> venv pronto."
 else
