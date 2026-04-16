@@ -10,7 +10,7 @@ REPO_DIR=$WORKSPACE/HunyuanWorld-Voyager
 WORK_DIR=$REPO_DIR/workspace_run
 
 # Variabili sovrascrivibili
-IMAGE="${IMAGE:-$REPO_DIR/via_appia.jpg}"
+IMAGE="${IMAGE:-$REPO_DIR/appia_strada.png}"
 DIRECTION="${DIRECTION:-forward}"
 SEED="${SEED:-42}"
 INFER_STEPS="${INFER_STEPS:-50}"
