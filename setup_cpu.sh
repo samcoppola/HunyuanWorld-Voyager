@@ -52,6 +52,9 @@ if [ ! -f "$WORKSPACE/.venv/setup_complete" ]; then
     # MoGe (depth estimator)
     pip install git+https://github.com/microsoft/MoGe.git
 
+    # hf_transfer — richiesto da RunPod (HF_HUB_ENABLE_HF_TRANSFER=1 di default)
+    pip install hf_transfer
+
     touch "$WORKSPACE/.venv/setup_complete"
     echo "==> venv pronto."
 else
