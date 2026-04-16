@@ -78,6 +78,7 @@ PROMPT="A highly realistic cinematic video of ancient Rome, showing a slow forwa
 
 python3 sample_image2video.py \
     --model HYVideo-T/2 \
+    --model-base "$REPO_DIR/ckpts" \
     --input-path "$CONDITION_DIR" \
     --prompt "$PROMPT" \
     --i2v-stability \
