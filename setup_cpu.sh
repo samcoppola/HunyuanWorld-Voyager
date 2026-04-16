@@ -45,7 +45,7 @@ if [ ! -f "$WORKSPACE/.venv/setup_complete" ]; then
         mmengine \
         timm \
         trimesh \
-        transformers==4.49 \
+        transformers==4.44.2 \
         "git+https://github.com/openai/CLIP.git" \
         "git+https://github.com/EasternJournalist/utils3d.git@c5daf6f6c244d251f252102d09e9b7bcef791a38"
 

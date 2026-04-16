@@ -1,7 +1,7 @@
 #!/bin/bash
 # ============================================================
-# Esegui sul pod GPU (A100 SXM 80GB) con Network Volume su /workspace.
-# Carica prima l'immagine via_appia.jpg tramite Jupyter nel repo.
+# Esegui sul pod GPU (A100 80GB) con Network Volume su /workspace.
+# Carica appia_strada.png via JupyterLab prima di lanciare.
 # ============================================================
 set -e
 
@@ -9,7 +9,6 @@ WORKSPACE=/workspace
 REPO_DIR=$WORKSPACE/HunyuanWorld-Voyager
 WORK_DIR=$REPO_DIR/workspace_run
 
-# Variabili sovrascrivibili
 IMAGE="${IMAGE:-$REPO_DIR/appia_strada.png}"
 DIRECTION="${DIRECTION:-forward}"
 SEED="${SEED:-42}"
@@ -24,9 +23,11 @@ OUTPUT_DIR=$WORK_DIR/output
 mkdir -p "$WORK_DIR" "$OUTPUT_DIR"
 
 # ---- STEP 1: MoGe depth estimation + rendering condizione ----
-echo "==> [1/2] Creazione condizione da $IMAGE ..."
-
-IMAGE="$IMAGE" DIRECTION="$DIRECTION" WORK_DIR="$WORK_DIR" python3 -c "
+if [ -d "$CONDITION_DIR/video_input" ]; then
+    echo "==> [1/2] Condizione già presente, skip."
+else
+    echo "==> [1/2] Creazione condizione da $IMAGE ..."
+    IMAGE="$IMAGE" DIRECTION="$DIRECTION" WORK_DIR="$WORK_DIR" python3 -c "
 import os, sys, numpy as np
 from PIL import Image
 import torch
@@ -70,9 +71,10 @@ create_video_input(
 )
 print('  Condizione pronta.')
 "
+fi
 
 # ---- STEP 2: Generazione video ----
-echo "==> [2/2] Generazione video (A100 80GB, bf16, no cpu offload)..."
+echo "==> [2/2] Generazione video (A100 80GB, bf16)..."
 export MODEL_BASE=$REPO_DIR/ckpts
 
 PROMPT="A highly realistic cinematic video of ancient Rome, showing a slow forward walking movement along the Via Appia Antica during the Roman Imperial period. The road is paved with large irregular basalt stones (basolato), slightly worn and uneven. On both sides of the road there are monumental Roman tombs, mausoleums, and funerary architectures of different shapes: cylindrical tombs, temple-like structures with columns, pyramidal roofs, statues, and relief decorations. The environment is bright daylight with warm natural sunlight, soft shadows, and a slightly dusty atmosphere. The camera simulates a human walking at eye level, moving slowly forward along the road. The movement is smooth and stable, with slight natural head motion. While moving forward, the camera gently looks to the right and left, alternating focus between the architectural details of the tombs, statues, and decorations. Occasionally, the camera lingers briefly on details such as carved reliefs, columns, or sculptures before returning to the forward path. A few distant Roman figures in tunics walk along the road, adding scale but not distracting from the environment. Vegetation is sparse: some grass, shrubs, and Roman umbrella pine trees (Pinus pinea) in the background. Ultra-realistic textures, physically accurate lighting, cinematic depth of field, historical accuracy, immersive atmosphere. first-person perspective, photorealistic, cinematic, ancient Roman architecture, no modern elements"
