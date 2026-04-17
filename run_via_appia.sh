@@ -80,7 +80,10 @@ export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 
 PROMPT="A highly realistic cinematic video of ancient Rome, showing a slow forward walking movement along the Via Appia Antica during the Roman Imperial period. The road is paved with large irregular basalt stones (basolato), slightly worn and uneven. On both sides of the road there are monumental Roman tombs, mausoleums, and funerary architectures of different shapes: cylindrical tombs, temple-like structures with columns, pyramidal roofs, statues, and relief decorations. The environment is bright daylight with warm natural sunlight, soft shadows, and a slightly dusty atmosphere. The camera simulates a human walking at eye level, moving slowly forward along the road. The movement is smooth and stable, with slight natural head motion. While moving forward, the camera gently looks to the right and left, alternating focus between the architectural details of the tombs, statues, and decorations. Occasionally, the camera lingers briefly on details such as carved reliefs, columns, or sculptures before returning to the forward path. A few distant Roman figures in tunics walk along the road, adding scale but not distracting from the environment. Vegetation is sparse: some grass, shrubs, and Roman umbrella pine trees (Pinus pinea) in the background. Ultra-realistic textures, physically accurate lighting, cinematic depth of field, historical accuracy, immersive atmosphere. first-person perspective, photorealistic, cinematic, ancient Roman architecture, no modern elements"
 
-python3 sample_image2video.py \
+NUM_GPUS="${NUM_GPUS:-1}"
+ULYSSES="${ULYSSES:-1}"
+
+torchrun --nproc_per_node="$NUM_GPUS" sample_image2video.py \
     --model HYVideo-T/2 \
     --model-base "$REPO_DIR/ckpts" \
     --input-path "$CONDITION_DIR" \
@@ -92,13 +95,15 @@ python3 sample_image2video.py \
     --seed "$SEED" \
     --cfg-scale 6.0 \
     --embedded-cfg-scale 6.0 \
-    --video-size 544 960 \
+    --video-size 720 1280 \
     --video-length 49 \
     --save-path "$OUTPUT_DIR" \
     --precision bf16 \
     --vae-precision fp16 \
     --text-encoder-precision fp16 \
-    --vae-tiling
+    --vae-tiling \
+    --ulysses-degree "$ULYSSES" \
+    --ring-degree 1
 
 echo ""
 echo "==> Fatto! Output in: $OUTPUT_DIR"
